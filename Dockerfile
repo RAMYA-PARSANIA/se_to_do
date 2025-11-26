@@ -1,18 +1,17 @@
-FROM maven:3.8.7-openjdk-11-slim AS build
+FROM maven:3.9-eclipse-temurin-11 AS build
 
 # Set working directory
 WORKDIR /app
 
 # Copy pom.xml and source code
 COPY pom.xml .
-COPY TaskManager.java .
-COPY TaskManagerTest.java .
+COPY src ./src
 
 # Build the application
 RUN mvn clean package -DskipTests
 
 # Use a lighter image for runtime
-FROM openjdk:11-jre-slim
+FROM eclipse-temurin:11-jre
 
 # Set working directory
 WORKDIR /app
