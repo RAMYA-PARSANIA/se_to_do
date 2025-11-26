@@ -1,17 +1,24 @@
-FROM python:3.11-slim
+FROM maven:3.8.7-openjdk-11-slim AS build
 
 # Set working directory
 WORKDIR /app
 
-# Copy application files
-COPY task_manager.py .
-COPY requirements.txt .
+# Copy pom.xml and source code
+COPY pom.xml .
+COPY TaskManager.java .
+COPY TaskManagerTest.java .
 
-# Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt || true
+# Build the application
+RUN mvn clean package -DskipTests
 
-# Set environment variables
-ENV PYTHONUNBUFFERED=1
+# Use a lighter image for runtime
+FROM openjdk:11-jre-slim
+
+# Set working directory
+WORKDIR /app
+
+# Copy the JAR file from build stage
+COPY --from=build /app/target/task-manager.jar .
 
 # Run the application
-CMD ["python3", "task_manager.py"]
+CMD ["java", "-jar", "task-manager.jar"]

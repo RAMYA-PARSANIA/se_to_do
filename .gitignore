@@ -1,14 +1,15 @@
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
+# Java
+*.class
+*.jar
+*.war
+*.ear
+target/
+*.log
 
-# Virtual environments
-venv/
-env/
-ENV/
+# Maven
+.mvn/
+mvnw
+mvnw.cmd
 
 # Task manager data
 tasks.json
@@ -19,6 +20,10 @@ test_tasks.json
 .idea/
 *.swp
 *.swo
+*.iml
+.project
+.classpath
+.settings/
 
 # OS
 .DS_Store

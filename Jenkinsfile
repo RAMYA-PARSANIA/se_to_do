@@ -3,7 +3,7 @@ pipeline {
     
     environment {
         DOCKER_HUB_CREDENTIALS = credentials('dockerhub-credentials')
-        DOCKER_IMAGE_NAME = 'your-dockerhub-username/task-manager'
+        DOCKER_IMAGE_NAME = 'ramyaparsania/task-manager'
         DOCKER_IMAGE_TAG = "${BUILD_NUMBER}"
     }
     
@@ -12,7 +12,7 @@ pipeline {
             steps {
                 echo 'Pulling code from GitHub...'
                 git branch: 'main',
-                    url: 'https://github.com/your-username/your-repo.git'
+                    url: 'https://github.com/RAMYA-PARSANIA/se_to_do.git'
             }
         }
         
@@ -20,10 +20,9 @@ pipeline {
             steps {
                 echo 'Building the application...'
                 script {
-                    // For Python, we'll verify syntax and install dependencies
+                    // Build Java application using Maven
                     sh '''
-                        python3 --version
-                        pip install -r requirements.txt || echo "No requirements.txt found"
+                        mvn clean compile
                     '''
                 }
             }
@@ -34,7 +33,18 @@ pipeline {
                 echo 'Running tests...'
                 script {
                     sh '''
-                        python3 -m pytest tests/ || python3 -m unittest discover -s tests -p "test_*.py"
+                        mvn test
+                    '''
+                }
+            }
+        }
+        
+        stage('Package') {
+            steps {
+                echo 'Packaging the application...'
+                script {
+                    sh '''
+                        mvn package
                     '''
                 }
             }
