@@ -20,9 +20,9 @@ pipeline {
             steps {
                 echo 'Building the application...'
                 script {
-                    // Build Java application using Maven
-                    sh '''
-                        mvn clean compile
+                    // Build Java application using Maven via WSL
+                    bat '''
+                        wsl bash -c "cd '/mnt/c/ProgramData/Jenkins/.jenkins/workspace/Task-Manager-Pipeline' && mvn clean compile"
                     '''
                 }
             }
@@ -32,8 +32,8 @@ pipeline {
             steps {
                 echo 'Running tests...'
                 script {
-                    sh '''
-                        mvn test
+                    bat '''
+                        wsl bash -c "cd '/mnt/c/ProgramData/Jenkins/.jenkins/workspace/Task-Manager-Pipeline' && mvn test"
                     '''
                 }
             }
@@ -43,8 +43,8 @@ pipeline {
             steps {
                 echo 'Packaging the application...'
                 script {
-                    sh '''
-                        mvn package
+                    bat '''
+                        wsl bash -c "cd '/mnt/c/ProgramData/Jenkins/.jenkins/workspace/Task-Manager-Pipeline' && mvn package"
                     '''
                 }
             }
@@ -59,7 +59,7 @@ pipeline {
             steps {
                 echo 'Building Docker image...'
                 script {
-                    sh """
+                    bat """
                         docker build -t ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} .
                         docker tag ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} ${DOCKER_IMAGE_NAME}:latest
                     """
@@ -76,8 +76,8 @@ pipeline {
             steps {
                 echo 'Pushing Docker image to Docker Hub...'
                 script {
-                    sh """
-                        echo \$DOCKER_HUB_CREDENTIALS_PSW | docker login -u \$DOCKER_HUB_CREDENTIALS_USR --password-stdin
+                    bat """
+                        echo %DOCKER_HUB_CREDENTIALS_PSW% | docker login -u %DOCKER_HUB_CREDENTIALS_USR% --password-stdin
                         docker push ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
                         docker push ${DOCKER_IMAGE_NAME}:latest
                         docker logout
@@ -90,14 +90,14 @@ pipeline {
     post {
         success {
             echo 'Pipeline completed successfully!'
-            sh 'docker images'
+            bat 'docker images'
         }
         failure {
             echo 'Pipeline failed!'
         }
         always {
             echo 'Cleaning up...'
-            sh 'docker system prune -f || true'
+            bat 'docker system prune -f || exit 0'
         }
     }
 }
