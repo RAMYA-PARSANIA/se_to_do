@@ -20,9 +20,9 @@ pipeline {
             steps {
                 echo 'Building the application...'
                 script {
-                    // Build Java application using Maven via WSL
+                    // Build Java application using Maven daemon
                     bat '''
-                        wsl bash -c "cd '/mnt/c/ProgramData/Jenkins/.jenkins/workspace/Task-Manager-Pipeline' && mvn clean compile"
+                        "D:\\Downloads\\maven-mvnd-1.0.3-windows-amd64\\maven-mvnd-1.0.3-windows-amd64\\bin\\mvnd.cmd" clean compile
                     '''
                 }
             }
@@ -32,9 +32,7 @@ pipeline {
             steps {
                 echo 'Running tests...'
                 script {
-                    bat '''
-                        wsl bash -c "cd '/mnt/c/ProgramData/Jenkins/.jenkins/workspace/Task-Manager-Pipeline' && mvn test"
-                    '''
+                    bat '"D:\\Downloads\\maven-mvnd-1.0.3-windows-amd64\\maven-mvnd-1.0.3-windows-amd64\\bin\\mvnd.cmd" test'
                 }
             }
         }
@@ -43,9 +41,7 @@ pipeline {
             steps {
                 echo 'Packaging the application...'
                 script {
-                    bat '''
-                        wsl bash -c "cd '/mnt/c/ProgramData/Jenkins/.jenkins/workspace/Task-Manager-Pipeline' && mvn package"
-                    '''
+                    bat '"D:\\Downloads\\maven-mvnd-1.0.3-windows-amd64\\maven-mvnd-1.0.3-windows-amd64\\bin\\mvnd.cmd" package'
                 }
             }
         }
