@@ -55,7 +55,9 @@ pipeline {
             steps {
                 echo 'Building Docker image...'
                 script {
+                    // Login to Docker Hub first to avoid rate limits
                     bat """
+                        echo %DOCKER_HUB_CREDENTIALS_PSW% | docker login -u %DOCKER_HUB_CREDENTIALS_USR% --password-stdin
                         docker build -t ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} .
                         docker tag ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} ${DOCKER_IMAGE_NAME}:latest
                     """
@@ -72,8 +74,8 @@ pipeline {
             steps {
                 echo 'Pushing Docker image to Docker Hub...'
                 script {
+                    // Already logged in from previous stage
                     bat """
-                        echo %DOCKER_HUB_CREDENTIALS_PSW% | docker login -u %DOCKER_HUB_CREDENTIALS_USR% --password-stdin
                         docker push ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
                         docker push ${DOCKER_IMAGE_NAME}:latest
                         docker logout
