@@ -1,5 +1,5 @@
-# Use OpenJDK base image (available without Docker Hub login)
-FROM openjdk:11-jre-slim
+# Use Eclipse Temurin JRE base image
+FROM eclipse-temurin:11-jre-alpine
 
 # Set working directory
 WORKDIR /app
